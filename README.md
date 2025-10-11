@@ -1,6 +1,8 @@
 # toronto-equity-dashboard
 Social equity indices of city of Toronto
 
+Illustrative File Structure:
+
 toronto-equity-dashboard/
 
 ├── 📁 data/
