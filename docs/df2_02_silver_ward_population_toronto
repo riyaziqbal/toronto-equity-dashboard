@@ -1,0 +1,12 @@
+let
+  Source = #"Bronze 2023-WardProfiles-2011-2021-CensusData xlsx",
+  #"Filtered rows" = Table.SelectRows(Source, each [RowOrder] < 22),
+  #"Removed columns" = Table.RemoveColumns(#"Filtered rows", {"RowOrder"}),
+  #"Promoted headers" = Table.PromoteHeaders(#"Removed columns", [PromoteAllScalars = true]),
+  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Toronto", Int64.Type}, {"Ward 1", Int64.Type}, {"Ward 2", Int64.Type}, {"Ward 3", Int64.Type}, {"Ward 4", Int64.Type}, {"Ward 5", Int64.Type}, {"Ward 6", Int64.Type}, {"Ward 7", Int64.Type}, {"Ward 8", Int64.Type}, {"Ward 9", Int64.Type}, {"Ward 10", Int64.Type}, {"Ward 11", Int64.Type}, {"Ward 12", Int64.Type}, {"Ward 13", Int64.Type}, {"Ward 14", Int64.Type}, {"Ward 15", Int64.Type}, {"Ward 16", Int64.Type}, {"Ward 17", Int64.Type}, {"Ward 18", Int64.Type}, {"Ward 19", Int64.Type}, {"Ward 20", Int64.Type}, {"Ward 21", Int64.Type}, {"Ward 22", Int64.Type}, {"Ward 23", Int64.Type}, {"Ward 24", Int64.Type}, {"Ward 25", Int64.Type}}, "en-US"),
+  #"Filtered rows 1" = Table.SelectRows(#"Changed column type", each ([Column1] <> "Total - Age")),
+  #"Unpivoted other columns" = Table.UnpivotOtherColumns(#"Filtered rows 1", {"Column1"}, "Attribute", "Value"),
+  #"Filtered rows 2" = Table.SelectRows(#"Unpivoted other columns", each ([Attribute] <> "Toronto")),
+  #"Renamed columns" = Table.RenameColumns(#"Filtered rows 2", {{"Column1", "Age Group"}, {"Attribute", "Ward"}, {"Value", "Count of People"}})
+in
+  #"Renamed columns"
