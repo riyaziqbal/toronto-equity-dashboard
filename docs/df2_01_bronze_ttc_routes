@@ -1,0 +1,12 @@
+let
+  Source = Lakehouse.Contents([]),
+  #"Navigation 1" = Source{[workspaceId = "6a2d5314-0cf7-4016-a2f6-97ffae7192ad"]}[Data],
+  #"Navigation 2" = #"Navigation 1"{[lakehouseId = "30fdebf4-ca3e-422a-8387-5f4d13fe2abf"]}[Data],
+  #"Navigation 3" = #"Navigation 2"{[Id = "Files", ItemKind = "Folder"]}[Data],
+  #"Navigation 4" = #"Navigation 3"{[Name = "TTC Data"]}[Content],
+  #"Navigation 5" = #"Navigation 4"{[Name = "routes.txt"]}[Content],
+  #"Imported Csv" = Csv.Document(#"Navigation 5"),
+  #"Promoted headers" = Table.PromoteHeaders(#"Imported Csv", [PromoteAllScalars = true]),
+  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"route_id", Int64.Type}, {"agency_id", Int64.Type}, {"route_short_name", Int64.Type}, {"route_long_name", type text}, {"route_desc", type text}, {"route_type", Int64.Type}, {"route_url", type text}, {"route_color", type text}, {"route_text_color", type text}})
+in
+  #"Changed column type"
